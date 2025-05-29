@@ -7,6 +7,7 @@
 #include "mpu6050_driver.h"
 #include "neo6m_gps_driver.h"
 #include "timer.h"
+#include "motion_detection.h"
 
 #define WIFI_ON 0
 
@@ -31,27 +32,37 @@ void app_main(void)
 {
     setup();
 
-    // int16_t data_x, data_y, data_z;
-    // while (1)
-    // {
-    //     mpu6050_read_data(&data_x, &data_y, &data_z);
-    //     ESP_LOGI(TAG, "X_value = %d | Y_value = %d | Z_value = %d", data_x, data_y, data_z);
-    //     vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1000 ms (1 second)
-    // }
+    int16_t data_x, data_y, data_z;
+    while (1)
+    {
+        mpu6050_read_data(&data_x, &data_y, &data_z);
+        ESP_LOGI(TAG, "X_value = %d | Y_value = %d | Z_value = %d", data_x, data_y, data_z);
+        int16_t res = detect_movement(data_x,data_y,data_z);
+        if(res)
+        {
+            printf("Motion detected!\n");
+        }
+        else
+        {
+            printf("No Motion detected\n");
+        }
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1000 ms (1 second)
+    }
 
     // while (1)
     // {
     //     neo6m_gps_read();
     //     vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1000 ms (1 second)
     // }
-    esp_netif_ip_info_t ip_info;
-    esp_netif_t* netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
-    if (esp_netif_get_ip_info(netif, &ip_info) == ESP_OK)
-    {
-        printf("My IP: " IPSTR "\n", IP2STR(&ip_info.ip));
-    }
 
-    nvs_flash_init();
-    wifi_connection();
-    start_webserver();
+    // esp_netif_ip_info_t ip_info;
+    // esp_netif_t* netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+    // if (esp_netif_get_ip_info(netif, &ip_info) == ESP_OK)
+    // {
+    //     printf("My IP: " IPSTR "\n", IP2STR(&ip_info.ip));
+    // }
+
+    // nvs_flash_init();
+    // wifi_connection();
+    // start_webserver();
 }
