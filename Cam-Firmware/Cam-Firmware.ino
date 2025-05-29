@@ -10,7 +10,7 @@
 #include <HTTPClient.h>
 
 // WiFi Credentials
-const char *ssid = "Wei-I 的 iPhone";
+const char *ssid = "YHLiPhone";
 const char *password = "efs25834331";
 
 // AI Thinker Pin Config
