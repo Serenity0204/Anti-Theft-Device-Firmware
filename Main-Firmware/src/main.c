@@ -4,10 +4,10 @@
 #include "freertos/task.h"
 #include "http_client.h"
 #include "http_server.h"
+#include "motion_detection.h"
 #include "mpu6050_driver.h"
 #include "neo6m_gps_driver.h"
 #include "timer.h"
-#include "motion_detection.h"
 
 #define WIFI_ON 0
 
@@ -37,8 +37,8 @@ void app_main(void)
     {
         mpu6050_read_data(&data_x, &data_y, &data_z);
         ESP_LOGI(TAG, "X_value = %d | Y_value = %d | Z_value = %d", data_x, data_y, data_z);
-        int16_t res = detect_movement(data_x,data_y,data_z);
-        if(res)
+        int16_t res = detect_movement(data_x, data_y, data_z);
+        if (res)
         {
             printf("Motion detected!\n");
         }
