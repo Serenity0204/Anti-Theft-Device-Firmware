@@ -1,4 +1,5 @@
 #include "neo6m_gps_driver.h"
+#include "minmea.h"
 
 static char buffer[BUFFER_SIZE];
 
@@ -21,10 +22,35 @@ static void read_raw_nmea(char* buffer)
 {
     memset(buffer, 0, BUFFER_SIZE);
     uart_read_bytes(NEO6M_UART_NUM, buffer, BUFFER_SIZE, 0);
+    printf("%s\n", buffer);
 }
 
-void neo6m_gps_read()
+gps_data_t neo6m_gps_read()
 {
+    gps_data_t data = {
+        .valid = false,
+        .latitude = 0.0f,
+        .longitude = 0.0f,
+    };
+
     read_raw_nmea(buffer);
-    printf("%s\n", buffer);
+
+    char* line = strtok(buffer, "\n");
+    while (line != NULL)
+    {
+        if (minmea_sentence_id(line, false) == MINMEA_SENTENCE_RMC)
+        {
+            struct minmea_sentence_rmc frame;
+            if (minmea_parse_rmc(&frame, line) && frame.valid)
+            {
+                data.valid = true;
+                data.latitude = minmea_tocoord(&frame.latitude);
+                data.longitude = minmea_tocoord(&frame.longitude);
+                // Found valid fix, no need to parse more
+                break;
+            }
+        }
+        line = strtok(NULL, "\n");
+    }
+    return data;
 }

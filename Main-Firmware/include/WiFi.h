@@ -15,6 +15,6 @@
 #include "nvs_flash.h"
 #include <stdio.h>
 
-void wifi_connection();
+void wifi_init();
 
 #endif

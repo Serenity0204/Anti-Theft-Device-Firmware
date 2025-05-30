@@ -13,7 +13,14 @@
 #define NEO6M_BAUD_RATE 9600
 #define BUFFER_SIZE 1024
 
+typedef struct
+{
+    bool valid;
+    float latitude;
+    float longitude;
+} gps_data_t;
+
 void neo6m_gps_init();
-void neo6m_gps_read();
+gps_data_t neo6m_gps_read();
 
 #endif

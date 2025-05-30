@@ -1,5 +1,12 @@
 #include "mpu6050_driver.h"
 
+// wake up MPU6050 from default sleep mode
+static void mpu6050_wake()
+{
+    uint8_t data[2] = {0x6B, 0x00};
+    ESP_ERROR_CHECK(i2c_master_write_to_device(I2C_MASTER_NUM, MPU6050_ADDR, data, 2, pdMS_TO_TICKS(1000)));
+}
+
 void mpu6050_init()
 {
     i2c_config_t conf = {
@@ -12,13 +19,7 @@ void mpu6050_init()
     };
     ESP_ERROR_CHECK(i2c_param_config(I2C_MASTER_NUM, &conf));
     ESP_ERROR_CHECK(i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0));
-}
-
-// wake up MPU6050 from default sleep mode
-void mpu6050_wake()
-{
-    uint8_t data[2] = {0x6B, 0x00};
-    ESP_ERROR_CHECK(i2c_master_write_to_device(I2C_MASTER_NUM, MPU6050_ADDR, data, 2, pdMS_TO_TICKS(1000)));
+    mpu6050_wake();
 }
 
 void mpu6050_read_data(int16_t* x, int16_t* y, int16_t* z)

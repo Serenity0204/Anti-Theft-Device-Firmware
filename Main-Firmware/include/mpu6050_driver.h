@@ -15,7 +15,6 @@
 #define I2C_MASTER_NUM I2C_NUM_0
 
 void mpu6050_init();
-void mpu6050_wake();
 void mpu6050_read_data(int16_t* x, int16_t* y, int16_t* z);
 
 #endif

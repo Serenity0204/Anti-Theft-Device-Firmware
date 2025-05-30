@@ -21,7 +21,7 @@ static void wifi_event_handler(void* event_handler_arg, esp_event_base_t event_b
     }
 }
 
-void wifi_connection()
+static void wifi_connection()
 {
     // 1 - Wi-Fi/LwIP Init Phase
     esp_netif_init();                    // TCP/IP initiation 					s1.1
@@ -41,4 +41,12 @@ void wifi_connection()
     esp_wifi_start();
     // 4- Wi-Fi Connect Phase
     esp_wifi_connect();
+}
+
+void wifi_init()
+{
+    nvs_flash_init();
+    wifi_connection();
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    printf("WIFI was initiated ...........\n\n");
 }
