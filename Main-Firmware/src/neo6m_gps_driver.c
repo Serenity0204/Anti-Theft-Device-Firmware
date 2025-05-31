@@ -22,7 +22,6 @@ static void read_raw_nmea(char* buffer)
 {
     memset(buffer, 0, BUFFER_SIZE);
     uart_read_bytes(NEO6M_UART_NUM, buffer, BUFFER_SIZE, 0);
-    printf("%s\n", buffer);
 }
 
 gps_data_t neo6m_gps_read()

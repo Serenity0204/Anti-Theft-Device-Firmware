@@ -1,7 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define SSID "iPhone"
-#define PASS "12345678"
+#define SSID "YHLiPhone"
+#define PASS "efs25834331"
 
 #endif
