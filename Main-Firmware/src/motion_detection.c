@@ -31,7 +31,7 @@ int16_t detect_movement(int16_t x, int16_t y, int16_t z)
     sqrt_sum = xs + ys + zs;
     uint32_t magnitude = fast_sqrt(sqrt_sum);
     // within motionless range, return 0 stands for still
-    if (lower_bound < magnitude && magnitude < upper_bound)
+    if (LOWER_BOUND < magnitude && magnitude < UPPER_BOUND)
     {
         return 0;
     }

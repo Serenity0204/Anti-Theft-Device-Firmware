@@ -9,7 +9,6 @@
 #include "motion_detection.h"
 #include "mpu6050_driver.h"
 #include "neo6m_gps_driver.h"
-#include "timer.h"
 
 #define DEBUG_ON 0
 
@@ -18,7 +17,6 @@ void setup()
 
     wifi_init();
     buzzer_init();
-    // timer_init();
     mpu6050_init();
     neo6m_gps_init();
 
@@ -69,9 +67,19 @@ void motion_detection_task(void* pvParameters)
         if (detect_movement(data_x, data_y, data_z))
         {
             is_stolen = 1;
-            // send the gps_latitude and gps_longitude to the webserver
-            // TODO
+            // send the gps_latitude and gps_longitude to the webserver only when we have valid data
+            if (gps_latitude == -200.0f && gps_longitude == 200.0f && DEBUG_ON) printf("Invalid GPS data\n");
 
+            if (!(gps_latitude == -200.0f && gps_longitude == 200.0f))
+            {
+                char location[100];
+                double latitude = (double)gps_latitude;
+                double longitude = (double)gps_longitude;
+                snprintf(location, sizeof(location),
+                         "{\"latitude\": \"%.14f\", \"longitude\": \"%.14f\"}",
+                         latitude, longitude);
+                send_gps_location(location);
+            }
             // turn on buzzer
             if (!did_buzz)
             {
@@ -102,14 +110,17 @@ void app_main(void)
     xTaskCreate(motion_detection_task, "motion_detection_task", 4096, NULL, 20, NULL);
     xTaskCreate(gps_task, "gps_task", 4096, NULL, 5, NULL);
 
-    while (1)
+    if (DEBUG_ON)
     {
-        printf("current mode:");
-        if (locked)
-            printf("locked mode\n");
-        else
-            printf("unlocked mode\n");
+        while (1)
+        {
+            printf("current mode:");
+            if (locked)
+                printf("locked mode\n");
+            else
+                printf("unlocked mode\n");
 
-        vTaskDelay(pdMS_TO_TICKS(1000));
+            vTaskDelay(pdMS_TO_TICKS(1000));
+        }
     }
 }
