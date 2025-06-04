@@ -23,7 +23,7 @@ This repository contains the firmware for our [Micro-Mobility Device Tracker](ht
 - MPU6050 motion sensor
 - NEO-6M GPS module
 - Active Buzzer </br>
-![PCB Image](img/pcb.png)
+![PCB Image](img/annotate_pcb.png)
 
 ## Usage
 1. Flash the `main` firmware to the main devboard.
